@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        html, body {
+            height:100%;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        body {
+            background-color: #f3f3f3;
+            overflow:hidden;
+            margin:0;
+        }
+        #selector {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .thumb {
+            padding: 5px 5px;
+            float: left;
+            width: 200px;
+            padding: 5px 5px;
+            vertical-align: middle;
+            cursor: default;
+            margin-top: 5px;
+        }
+        body:not(.onlyIcon) .scrollbox .thumb:hover {
+             background-color: #e5e5e5;
+             cursor: move;
+        }
+
+        .scrollbox .thumb img {
+            float: left;
+        }
+
+        .onlyIcon .scrollbox .thumb img {
+            padding: 5px;
+            border-radius: 10px;
+        }
+        .onlyIcon .scrollbox .thumb:hover img{
+             background-color: #e5e5e5;
+            cursor: move;
+        }
+
+        .scrollbox .thumb .caption {
+            float: left;
+        }
+
+        .onlyIcon .scrollbox .thumb .caption {
+            padding: 5px;
+        }
+
+        .thumb .caption {
+            font-family: "Myriad pro", "Segoe UI", Arial, sans-serif;
+            font-size: 13px;
+            color: #535353;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <section style="
+        height: 100%;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;" >
+            <header id="selector" style="background-color: #fafafa; border-bottom :solid 1px #c5c5c5; padding: 5px;"></header>
+            <div id="scrollBox" class="scrollbox" style="overflow-y: auto; -webkit-box-flex: 1; -webkit-flex: 1; -ms-flex: 1; flex: 1; padding-bottom:10px">
+        </div>
+    </section>
+    <script type="text/javascript">
+
+        function htmlEntities(str)
+        {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function updateFolders(i)
+        {
+            var html = '';
+
+            for (j = 0; j < folders.length; j++) {
+                if (j == i) {
+                    html += '<div class="thumb" onclick="selectFolder(' + j + ')" style="background-color: #dbdbdb;">';
+                    html += '<img draggable="false" src="folderOpen.png" />';
+                }
+                else {
+                    html += '<div class="thumb" onclick="selectFolder(' + j + ')" >';
+                    html += '<img draggable="false" src="folder.png" />';
+                }
+                html += '<span class="caption">' + htmlEntities(folders[j]) + '</span></div>\n';
+            }
+
+            html += '<div class="clear:both;" />';
+
+            document.getElementById("selector").innerHTML = html;
+
+        }
+
+        function selectFolder(i)
+        {
+            var content = studio.extension.getFolderContent("images/" + folders[i] + "/");
+            var files = content.files;
+
+            var html = '';
+
+            for (j = 0; j < files.length; j++)
+            {
+                html += '<div draggable="true" class="thumb">';
+                html += '<img draggable="false" src="images/' + folders[i] + "/" + files[j] + '" />';
+                html += '<span class="caption">' + htmlEntities( files[ j ] ) + '</span></div>\n';
+            }
+
+            html += '<div class="clear:both;" />';
+            document.getElementById("scrollBox").innerHTML = html;
+
+            updateFolders( i );
+
+        }
+
+        var obj = studio.extension.getFolderContent("images/"),
+            folders = obj.folders;
+
+        selectFolder(0);
+
+        document.getElementById("scrollBox").ondragstart = function(e) {
+            var img = e.target.getElementsByTagName("img")[0];
+            e.dataTransfer.setData("Text", img.src);
+            e.dataTransfer.setDragImage(img, 0, 0);
+        }
+
+        if (!window.requestAnimationFrame)
+            document.body.className = 'onlyIcon';
+
+    </script>
+
+</body>
+</html>

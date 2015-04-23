@@ -1,0 +1,35 @@
+{
+	"extension": 
+	{
+		"name": "MediaLibrary",
+		"version": "1.0.0",
+		"description": "Wakanda Studio Media Library",
+		"icon": "MediaLibrary.png",
+		
+		"senders": [
+			{
+				"location": "studioToolbar", 
+				"tips": "Media Library: A set of pictures to drag into your page.",
+				"icon": "MediaLibrary.png",
+				"title": "Media Library",
+				"actionName": "openMediaLibrary"
+			}
+		],
+		
+		"actions": [
+			{
+				"name": "openMediaLibrary",
+				"title": "openMediaLibrary"
+			},
+			{
+				"name": "initMediaLibrary",
+				"title": "initMediaLibrary",
+				"trigger": [
+					{ "event": "onStudioStart" }
+				]
+			}
+		],
+
+		"lifetime": "action_lifetime"
+	}
+}
